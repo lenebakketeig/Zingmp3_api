@@ -4,7 +4,7 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
 [![Capture.png](https://i.postimg.cc/Nf6Hx9nL/Capture.png)](https://postimg.cc/CzK5h1SV)
 
 [![Capture.png](https://i.postimg.cc/C5HxbDKg/Capture.png)](https://postimg.cc/Fkzv4YcW)
-## Module
+## ***Module***
 
  - requests
  - bs4
@@ -15,14 +15,14 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
     pip install -r requirements.txt
     ``` 
     
-## Options
+## ***Options***
   - `-j` or `json` : Show json of info media. 
   - `-s` or `--save` : Path to save file downloaded.
   - `-l` or `--only-lyric` : Download only lyric.
   - `-m` or `--only-media` : Download only media.
   - Default will download all media and lyric.
  
-##Supported
+## ***Supported***
 - url media
     ```
     https://zingmp3.vn/video-clip/.../<id>.html
@@ -46,7 +46,7 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
     https://zingmp3.vn/<name_artist>/album
     ```
  
-## Usage
+## ***Usage***
 [![Capture.png](https://i.postimg.cc/0NLFxB0t/Capture.png)](https://postimg.cc/zLF0FpMW)
  - Install module
     ```
@@ -223,7 +223,7 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
     }
     ```
 
-## Note
+## ***Note***
 - All file downloaded in folder DOWNLOAD at the same path
 - If there's an error or problem, please write issue out here
  [`zingmp3 issues`](https://github.com/hatienl0i261299/Zingmp3_api/issues)
