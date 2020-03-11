@@ -20,8 +20,8 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
   - `-m` or `--only-media` : Download only media.
   - Default will download all media and lyric.
  
-## ***Supported***
-- url media
+## ***URL Supported***
+- **url media**
     ```
     https://zingmp3.vn/video-clip/.../<id>.html
     https://zingmp3.vn/bai-hat/.../<id>.html
@@ -29,32 +29,43 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
     https://zingmp3.vn/album/.../<id>.html
     https://zingmp3.vn/embed/.../<id>.html
     ```
-- url artist's profile type 1
+- **url artist's profile type 1**
     ```
     https://zingmp3.vn/nghe-si/<name_artist>/video
     https://zingmp3.vn/nghe-si/<name_artist>/playlist
     https://zingmp3.vn/nghe-si/<name_artist>/bai-hat
     https://zingmp3.vn/nghe-si/<name_artist>/album
     ```
-- url artist's profile type 2
+- **url artist's profile type 2**
     ```
     https://zingmp3.vn/<name_artist>/bai-hat
     https://zingmp3.vn/<name_artist>/playlist
     https://zingmp3.vn/<name_artist>/video
     https://zingmp3.vn/<name_artist>/album
     ```
+- **url #ZINGCHART**
+    ```
+    https://zingmp3.vn/zing-chart/bai-hat.html
+    https://zingmp3.vn/zing-chart/video.html
+    https://zingmp3.vn/zing-chart-tuan/bai-hat-Viet-Nam/<id>.html
+    https://zingmp3.vn/zing-chart-tuan/video-US-UK/<id>.html
+    ```
+- **url new release**
+    ```
+    https://zingmp3.vn/top-new-release/index.html
+    ```
  
 ## ***Usage***
 [![Capture.png](https://i.postimg.cc/0NLFxB0t/Capture.png)](https://postimg.cc/zLF0FpMW)
- - Install module
+ - **Install module**
     ```
     pip install -r requirements.txt
     ```
- - Run
+ - **Run**
     ```
     python zingmp3.py https://zingmp3.vn/bai-hat/Khoc-Cung-Em-Mr-Siro-Gray-Wind/ZWBI0DFI.html
     ``` 
- - Show json of info media
+ - **Show json of info media**
      ```
      python zingmp3.py -j https://zingmp3.vn/bai-hat/Khoc-Cung-Em-Mr-Siro-Gray-Wind/ZWBI0DFI.html
      ```

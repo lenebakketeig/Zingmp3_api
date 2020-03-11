@@ -10,24 +10,39 @@ class extractZingMp3(ProgressBar):
         self._path_save = kwargs.get('path_save') or os.getcwd()
         self._headers = HEADERS
         self._regex_url = '''(?x)^
-                ((http[s]?|fpt):)\/?\/(www\.|m\.|)
-                (?P<site>
-                    (?:(zingmp3\.vn)|   
-                    (mp3\.zing\.vn))
-                )\/                                                        # check domain (zingmp3 and mp3.zing.vn)
-                (
-                    (?P<type>bai-hat|album|video-clip|playlist|embed)\/    # get type (bai-hat, album,video-clip, playlist)
-                    (?P<slug>.*?)\/                                        # get slug of media
-                    (?P<id>.*?)(?:$|\W)                                    # get id of media
-                    |                                                      # if not media url, url is artist's profile url
-                    (?:nghe-si\/|)(?P<name_artist>.*?)\/                   # get name artits
-                    (?P<slug_artist>.*?$)                                  # get artist's slug
-                )
-                        '''
+        ((http[s]?|fpt):)\/?\/(www\.|m\.|)
+        (?P<site>
+            (?:(zingmp3\.vn)|   
+            (mp3\.zing\.vn))
+        )\/                                                        # check domain (zingmp3 and mp3.zing.vn)
+        (
+            (?P<type>bai-hat|album|video-clip|playlist|embed)\/    # get type (bai-hat, album,video-clip, playlist)
+            (?P<slug>.*?)\/                                        # get slug of media
+            (?P<id>.*?)(?:$|\W)                                    # get id of media
+            |                                                      # if not media url, url is artist's profile url or chart url
+            (?:nghe-si\/|)(?P<name>.*?)\/                          # get name artits or get name chart
+            (?P<slug_name>.*?)(?:$|\/(?P<id_name>.*?)(?:$|\W))     # get artist's slug or get chart slug
+        )
+        '''
 
         '''
         
             All url test
+            
+            {
+                "url":"https://zingmp3.vn/zing-chart/bai-hat.html",
+                "note":"url chart to get top bai-hat in zing"
+            }
+            
+            {
+                "url":"https://zingmp3.vn/zing-chart-tuan/bai-hat-US-UK/IWZ9Z0BW.html",
+                "note":"url chart to get top bai-hat in zing"
+            }
+            
+            {
+                "url":"https://zingmp3.vn/top-new-release/index.html",
+                "note":"top bai-hat new release"
+            }
             
             {
                 "url":"https://zingmp3.vn/video-clip/Tim-Ve-Loi-Ru-New-Version-Thanh-Hung-Various-Artists/ZW6ZOIZ7.html",
@@ -36,7 +51,7 @@ class extractZingMp3(ProgressBar):
             
             {
                 "url":"https://zingmp3.vn/video-clip/Yeu-Nhieu-Ghen-Nhieu-Thanh-Hung/ZWB087B9.html",
-                "note":"video clip (labal max is 1080p)"
+                "note":"video clip (label max is 1080p)"
             }
             
             {
@@ -84,36 +99,78 @@ class extractZingMp3(ProgressBar):
             return 'Invalid url.'
         video_id = item.group('id')
         type = item.group('type')
-        name_artist = item.group('name_artist')
+        name = item.group('name')
         slug = item.group('slug')
         if type in self._type_supported:
             return self.real_extract_media(type, video_id, slug)
-        elif name_artist:
-            return self.real_extract_user(item, name_artist)
+        elif name:
+            return self.real_extract_list_media(item, name)
         else:
             sys.stdout.write(fg + '[' + fr + '*' + fg + '] : Invalid url.\n')
         return
 
-    def real_extract_user(self, item, name_artist):
-        slug_user = item.group('slug_artist')
+    def real_extract_list_media(self, item, name):
+        slug_name = item.group('slug_name')
         list_name_api = {
-            'bai-hat': "/song/get-list",       # get artist's bai-hat
+            'bai-hat': "/song/get-list",  # get artist's bai-hat
             "playlist": "/playlist/get-list",  # get artist's playlist
-            "album": "/playlist/get-list",     # get artist's album
-            "video": "/video/get-list"         # get artist's video or artist's MV
+            "album": "/playlist/get-list",  # get artist's album
+            "video": "/video/get-list",  # get artist's video or artist's MV
+            'zing-chart': {  # get top realtime in zing
+                'name': '/chart-realtime/get-detail',  # name api of realtime chart
+                'bai-hat': 'song',  # get top bai-hat
+                'index': 'song',  # get top bai-hat
+                'video': 'video',  # get top video
+            },
+            'zing-chart-tuan': {  # get chart tuan in zing
+                'name': '/chart/get-chart',  # name api of chart tuan
+            },
+            'top-new-release': {  # get new release
+                'name': '/chart/get-chart-new-release'  # name api of new release
+            }
         }
-        name_api = list_name_api.get(slug_user) or None
+        if name == 'zing-chart' or name == 'zing-chart-tuan' or name == 'top-new-release':
+            if name == 'zing-chart':
+                api = self.get_api(
+                    name_api=list_name_api.get(name).get('name'),
+                    type=list_name_api.get(name).get(slug_name)
+                )
+            elif name == 'zing-chart-tuan':
+                api = self.get_api(
+                    name_api=list_name_api.get(name).get('name'),
+                    video_id=item.group('id_name')
+                )
+            else:
+                api = self.get_api(
+                    name_api=list_name_api.get(name).get('name'),
+                    new_release=True
+                )
+            f = get_req(url=api, headers=self._headers, type='json')
+            if f.get('msg').lower() != 'success':
+                sys.stdout.write(fg + '[' + fr + '*' + fg + f'] : {self._url} data null.\n')
+                return
+            if self._show_json_info:
+                print(json.dumps(f, indent=4, ensure_ascii=False))
+                return
+            datas = try_get(f, lambda x: x['data']['items'])
+            for data in datas:
+                self.real_extract_media(
+                    type=search_regex(r'(?x)\/(.*?)\/', data.get('link')),
+                    video_id=data.get('id'),
+                )
+            return
+        name_api = list_name_api.get(slug_name) or None
         if not name_api:
             sys.stdout.write(fg + '[' + fr + '*' + fg + '] : Invalid url.\n')
             return
-        content = get_req(url="https://mp3.zing.vn/nghe-si/" + name_artist, headers=self._headers, type='text')
+        content = get_req(url="https://mp3.zing.vn/nghe-si/" + name, headers=self._headers, type='text')
         id_artist = search_regex(r'''(?x)
                                 \<a.*?tracking=\"\_frombox=artist_artistfollow\"
                                     \s+data-id=\"(?P<id_artist>.*?)\"
                                     \s+data-type=\"(?P<data_type>.*?)\"
                                     \s+data-name=\"(?P<data_name>.*?)\".*?\>
-                                    ''',content,group="id_artist")
-        api = self.get_api(name_api=list_name_api.get(slug_user), video_id=id_artist)
+                                    ''', content, group="id_artist")
+        api = self.get_api(name_api=name_api, video_id=id_artist)
 
         start = 0
         count = 30
@@ -312,7 +369,7 @@ class extractZingMp3(ProgressBar):
         sys.stdout.write('\n\n')
         return
 
-    def get_api(self, name_api, video_id=''):
+    def get_api(self, name_api, video_id='', type='', new_release=False):
         API_KEY = '38e8643fb0dc04e8d65b99994d3dafff'
         SECRET_KEY = b'10a01dcf33762d3a204cb96429918ff6'
         if not name_api:
@@ -344,7 +401,37 @@ class extractZingMp3(ProgressBar):
             }
             return url + get_request_path(data)
 
-        return get_api_by_id(video_id)
+        def get_api_chart(type):
+            url = f"https://zingmp3.vn/api{name_api}?type={type}&"
+            time = str(int(datetime.datetime.now().timestamp()))
+            sha256 = get_hash256(f"ctime={time}")
+
+            data = {
+                'ctime': time,
+                'api_key': API_KEY,
+                'sig': get_hmac512(f"{name_api}{sha256}")
+            }
+            return url + get_request_path(data)
+
+        def get_api_new_release():
+            url = f"https://zingmp3.vn/api{name_api}?"
+            time = str(int(datetime.datetime.now().timestamp()))
+            sha256 = get_hash256(f"ctime={time}")
+
+            data = {
+                'ctime': time,
+                'api_key': API_KEY,
+                'sig': get_hmac512(f"{name_api}{sha256}")
+            }
+            return url + get_request_path(data)
+
+        if video_id:
+            return get_api_by_id(video_id)
+        if type:
+            return get_api_chart(type)
+        if new_release == True:
+            return get_api_new_release()
+        return
 
 
 def main(argv):
@@ -353,9 +440,9 @@ def main(argv):
     parser.add_argument('-s', '--save', type=str, default=os.getcwd(), help='Path to save', dest='path_save')
     parser.add_argument('-j', '--json', default=False, action='store_true', help="Show json of info media.",
                         dest='show_json_info')
-    parser.add_argument('-l','--only-lyric', default=False, action='store_true', help='Download only lyric.',
+    parser.add_argument('-l', '--only-lyric', default=False, action='store_true', help='Download only lyric.',
                         dest='down_lyric')
-    parser.add_argument('-m','--only-media', default=False, action='store_true', help='Download only media.',
+    parser.add_argument('-m', '--only-media', default=False, action='store_true', help='Download only media.',
                         dest='down_media')
     args = parser.parse_args()
 
