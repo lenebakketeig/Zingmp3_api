@@ -21,7 +21,7 @@ class extractZingMp3(ProgressBar):
             (?P<id>.*?)(?:$|\W)                                    # get id of media
             |                                                      # if not media url, url is artist's profile url or chart url
             (?:nghe-si\/|)(?P<name>.*?)\/                          # get name artits or get name chart
-            (?P<slug_name>.*?)(?:$|\/(?P<id_name>.*?)(?:$|\W))     # get artist's slug or get chart slug
+            (?P<slug_name>.*?)(?:$|\.|\/(?P<id_name>.*?)(?:$|\W))     # get artist's slug or get chart slug
         )
         '''
 
