@@ -13,6 +13,5 @@ import io
 from colorama import init, Style, Fore, Back
 from requests import RequestException
 from urllib.parse import urljoin, urlparse, unquote, quote, parse_qs, urlencode
-from bs4 import BeautifulSoup as get_soup
 from http import client
 from urllib import parse

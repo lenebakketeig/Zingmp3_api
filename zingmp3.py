@@ -107,11 +107,12 @@ class extractZingMp3(ProgressBar):
             sys.stdout.write(fg + '[' + fr + '*' + fg + '] : Invalid url.\n')
             return
         content = get_req(url="https://mp3.zing.vn/nghe-si/" + name_artist, headers=self._headers, type='text')
-        soup = get_soup(content, 'html5lib')
-        s_tag = soup.find(r's', attrs={'class': 'fn-followed', 'data-id': True})
-        if not s_tag:
-            return 'null'
-        id_artist = s_tag.get('data-id')
+        id_artist = search_regex(r'''(?x)
+                                \<a.*?tracking=\"\_frombox=artist_artistfollow\"
+                                    \s+data-id=\"(?P<id_artist>.*?)\"
+                                    \s+data-type=\"(?P<data_type>.*?)\"
+                                    \s+data-name=\"(?P<data_name>.*?)\".*?\>
+                                    ''',content,group="id_artist")
         api = self.get_api(name_api=list_name_api.get(slug_user), video_id=id_artist)
 
         start = 0

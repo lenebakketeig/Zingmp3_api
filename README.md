@@ -1,4 +1,4 @@
-# Zingmp3
+# ***Zingmp3***
 Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
 
 [![Capture.png](https://i.postimg.cc/Nf6Hx9nL/Capture.png)](https://postimg.cc/CzK5h1SV)
@@ -7,8 +7,6 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
 ## ***Module***
 
  - requests
- - bs4
- - html5lib
  - colorama
  
     ```
