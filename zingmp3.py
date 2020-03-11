@@ -96,21 +96,22 @@ class extractZingMp3(ProgressBar):
 
     def real_extract_user(self, item, name_artist):
         slug_user = item.group('slug_artist')
+        list_name_api = {
+            'bai-hat': "/song/get-list",       # get artist's bai-hat
+            "playlist": "/playlist/get-list",  # get artist's playlist
+            "album": "/playlist/get-list",     # get artist's album
+            "video": "/video/get-list"         # get artist's video or artist's MV
+        }
+        name_api = list_name_api.get(slug_user) or None
+        if not name_api:
+            sys.stdout.write(fg + '[' + fr + '*' + fg + '] : Invalid url.\n')
+            return
         content = get_req(url="https://mp3.zing.vn/nghe-si/" + name_artist, headers=self._headers, type='text')
         soup = get_soup(content, 'html5lib')
         s_tag = soup.find(r's', attrs={'class': 'fn-followed', 'data-id': True})
         if not s_tag:
             return 'null'
         id_artist = s_tag.get('data-id')
-        list_name_api = {
-            'bai-hat': "/song/get-list",  # get artist's bai-hat
-            "playlist": "/playlist/get-list",  # get artist's album
-            "video": "/video/get-list"  # get artist's video or artist's MV
-        }
-        name_api = list_name_api.get(slug_user) or None
-        if not name_api:
-            sys.stdout.write(fg + '[' + fr + '*' + fg + '] : Invalid url.\n')
-            return
         api = self.get_api(name_api=list_name_api.get(slug_user), video_id=id_artist)
 
         start = 0

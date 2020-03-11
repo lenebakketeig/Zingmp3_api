@@ -22,6 +22,29 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
   - `-m` or `--only-media` : Download only media.
   - Default will download all media and lyric.
  
+##Supported
+- url media
+    ```
+    https://zingmp3.vn/video-clip/.../<id>.html
+    https://zingmp3.vn/bai-hat/.../<id>.html
+    https://zingmp3.vn/playlist/.../<id>.html
+    https://zingmp3.vn/album/.../<id>.html
+    https://zingmp3.vn/embed/.../<id>.html
+    ```
+- url artist's profile type 1
+    ```
+    https://zingmp3.vn/nghe-si/<name_artist>/video
+    https://zingmp3.vn/nghe-si/<name_artist>/playlist
+    https://zingmp3.vn/nghe-si/<name_artist>/bai-hat
+    https://zingmp3.vn/nghe-si/<name_artist>/album
+    ```
+- url artist's profile type 2
+    ```
+    https://zingmp3.vn/<name_artist>/bai-hat
+    https://zingmp3.vn/<name_artist>/playlist
+    https://zingmp3.vn/<name_artist>/video
+    https://zingmp3.vn/<name_artist>/album
+    ```
  
 ## Usage
 [![Capture.png](https://i.postimg.cc/0NLFxB0t/Capture.png)](https://postimg.cc/zLF0FpMW)
@@ -201,5 +224,6 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
     ```
 
 ## Note
- If there's an error or problem, please write issue out here
+- All file downloaded in folder DOWNLOAD at the same path
+- If there's an error or problem, please write issue out here
  [`zingmp3 issues`](https://github.com/hatienl0i261299/Zingmp3_api/issues)
