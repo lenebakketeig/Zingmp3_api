@@ -4,11 +4,10 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
 [![Capture.png](https://i.postimg.cc/Nf6Hx9nL/Capture.png)](https://postimg.cc/CzK5h1SV)
 
 [![Capture.png](https://i.postimg.cc/C5HxbDKg/Capture.png)](https://postimg.cc/Fkzv4YcW)
-## ***Module***
-
- - requests
- - colorama
+## ***Installation***
+ - **Language**: Python3.x
  
+ - **Module**: requests, colorama
     ```
     pip install -r requirements.txt
     ``` 
@@ -20,7 +19,7 @@ Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) use api.
   - `-m` or `--only-media` : Download only media.
   - Default will download all media and lyric.
  
-## ***URL Supported***
+## ***All URL Supported***
 - **url media**
     ```
     https://zingmp3.vn/video-clip/.../<id>.html
