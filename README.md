@@ -1,5 +1,5 @@
 # ***Zingmp3***
-Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) or [`mp3.zing.vn/`](https://mp3.zing.vn/) (use api).
+Zingmp3 - A tool crawl data from [`zingmp3.vn`](https://zingmp3.vn/) or [`mp3.zing.vn`](https://mp3.zing.vn/) (use api).
 
 [![Capture.png](https://i.postimg.cc/Nf6Hx9nL/Capture.png)](https://postimg.cc/CzK5h1SV)
 
